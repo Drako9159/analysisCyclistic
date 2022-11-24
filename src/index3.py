@@ -4,7 +4,8 @@ from datetime import timedelta
 import numpy as np
 from matplotlib import pyplot as plt
 
-df = pd.read_csv("./csv/202201-divvy-tripdata.csv")
+df = pd.read_csv("./csv/202210.csv")
+
 
 station = "start_station_name"
 bike = "rideable_type"
@@ -13,14 +14,19 @@ ended = "ended_at"
 memberType = "member_casual"
 
 # Clean values NaN
-df.rename(columns={station: "Station", bike: "Bike", started: "Started",
-          ended: "Ended", memberType: "CasualOrMember"}, inplace=True)
-df.dropna(subset=["Station", "Bike", "Started",
-          "Ended", "CasualOrMember"], inplace=True)
-df = df.loc[:, ["Station", "Bike", "Started", "Ended",
-                "CasualOrMember"]].sort_values(by="Started")
-###
-def getStation():
+def cleanValues(df):
+    df.rename(columns={station: "Station", bike: "Bike", started: "Started",
+                        ended: "Ended", memberType: "CasualOrMember"}, inplace=True)
+    df.dropna(subset=["Station", "Bike", "Started",
+                       "Ended", "CasualOrMember"], inplace=True)
+    df = df.loc[:, ["Station", "Bike", "Started", "Ended",
+                      "CasualOrMember"]].sort_values(by="Started")
+   
+    return
+cleanValues(df)
+
+
+def getStationTrip():
     data = []
     avist = []
     #lg = df.loc[:,["Station"]]
@@ -31,16 +37,15 @@ def getStation():
     for row in data:
         check = df["Station"].value_counts()[row]
         avist.append(check)
-        print(check)
+    stationDf = {"station": data, "trips": avist}
+    stationDf = pd.DataFrame(stationDf).sort_values(by="trips")
+    print(stationDf)
 
 
 
-    #print(data)
+# print(df["CasualOrMember"].value_counts()["member"])
 
-#print(df["CasualOrMember"].value_counts()["member"])
 
-getStation()
-    
 # Get Bikes for Members
 def getBikesMembers():
     bikeMembers = df.loc[:, ["Bike", "CasualOrMember"]]
@@ -57,15 +62,35 @@ def getBikesMembers():
     bikesType = pd.DataFrame(bikesType)
     print(bikesType)
 
+#getBikesMembers()
+
 #dockedM = members["Bike"].value_counts()["docked_bike"]
-started = df.loc[:, ["Started"]]
-ended = df.loc[:, ["Ended"]]
 # Get Date in minutes
+
 def getTripTime(start, end):
     date1 = datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
     date2 = datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
     minutes = (date2 - date1) / timedelta(minutes=1)
     return minutes
+
+def getWeekDay():
+    st = df["Started"]
+    days = [0, 1, 2, 3, 4, 5, 6]
+    weekDay = []
+    trips = []
+    for row in st:
+        day = datetime.strptime(row, '%Y-%m-%d %H:%M:%S')
+        weekDay.append(day.weekday())
+    table = {"week_day": weekDay}
+    mean = pd.DataFrame(table).sort_values(by="week_day")
+    for row in days:
+        day = mean["week_day"].value_counts()[row]
+        trips.append(day)
+    tripsDay = {"day": ["sunday", "monday",
+                        "tuesday", "wednesday", "thursday", "friday", "saturday"], "trips": trips}
+    tripsDay = pd.DataFrame(tripsDay).sort_values(by="trips")
+    print(tripsDay)
+
 
 def getDate():
     st = df["Started"]
@@ -73,21 +98,41 @@ def getDate():
     resume = []
     fechaInicio = []
     fechaFinal = []
+    weekDay = []
     for row in st:
         fechaInicio.append(row)
+        day = datetime.strptime(row, '%Y-%m-%d %H:%M:%S')
+        weekDay.append(day.weekday())
+
     for row in ed:
         fechaFinal.append(row)
     cs = 0
     for row in st:
-       resume.append(getTripTime(fechaInicio[cs], fechaFinal[cs])) 
-       cs = cs + 1
-    table = {"trip_minutes": resume, "average" : "lol"}
+        resume.append(getTripTime(fechaInicio[cs], fechaFinal[cs]))
+        cs = cs + 1
+    table = {"trip_minutes": resume, "week_day": weekDay}
     mean = pd.DataFrame(table).sort_values(by="trip_minutes")
     average = mean["trip_minutes"].mean()
     print(mean)
     print(average)
- 
 
+def getMembers():
+    bikeMembers = df.loc[:, ["CasualOrMember"]]
+    members = bikeMembers.value_counts()["member"]
+    casual = bikeMembers.value_counts()["casual"]
+    mean = {"members": [members], "casual": [casual]}
+    mean = pd.DataFrame(mean)
+    print(mean)
+
+getMembers()
+
+'''
+prubea = "2022-01-4 23:47:29"
+lol = datetime.strptime(prubea, '%Y-%m-%d %H:%M:%S')
+x = lol.weekday()
+
+print(x)
+'''
 # Ahora sumar algunas horas. Vamos a parsear la fecha:
 # print(df["CasualOrMember"].value_counts()["member"])
 ##all = list(set(all))
