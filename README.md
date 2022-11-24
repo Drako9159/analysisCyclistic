@@ -83,3 +83,6 @@ def getMembers():
     print(mean)
 ````
 ![image](src/spreadsheet/2_5.png)
+- Casual vs Membership customers
+
+![image](src/spreadsheet/2_6.png)
