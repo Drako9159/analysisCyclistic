@@ -83,6 +83,10 @@ def getMembers():
     print(mean)
 ````
 ![image](src/spreadsheet/2_5.png)
-- Casual vs Membership customers
-
+### Casual vs Membership customers in recent months
 ![image](src/spreadsheet/2_6.png)
+The number of customers with a subscription has grown significantly, as have the number of casual customers until July, when there has been a significant reduction.
+
+### Types of bicycles by customer
+![image](src/spreadsheet/2_7.png)
+Membership customers prefer classic bikes, it would be good to invest in improving these bikes to attract more members.

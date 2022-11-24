@@ -4,7 +4,7 @@ from datetime import timedelta
 import numpy as np
 from matplotlib import pyplot as plt
 
-df = pd.read_csv("./csv/202210.csv")
+df = pd.read_csv("./csv/202201.csv")
 
 
 station = "start_station_name"
@@ -61,7 +61,7 @@ def getBikesMembers():
         electricC, electricM], "classic_bike": [classicC, classicM]}
     bikesType = pd.DataFrame(bikesType)
     print(bikesType)
-
+getBikesMembers()
 #getBikesMembers()
 
 #dockedM = members["Bike"].value_counts()["docked_bike"]
@@ -124,7 +124,7 @@ def getMembers():
     mean = pd.DataFrame(mean)
     print(mean)
 
-getMembers()
+
 
 '''
 prubea = "2022-01-4 23:47:29"
